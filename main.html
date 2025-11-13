@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Desk Inbox Simulation</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    margin: 0;
+  }
+  #sidebar {
+    width: 30%;
+    background: #f1f3f6;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+  }
+  #sidebar h2 {
+    text-align: center;
+    padding: 10px;
+  }
+  .email-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  .email-item:hover {
+    background: #e6e9ef;
+  }
+  .email-subject {
+    font-weight: bold;
+  }
+  .email-tag {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 0.7em;
+    margin-left: 8px;
+  }
+  .priority-tag {
+    display: inline-block;
+    background: #ff9800;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 5px;
+    font-size: 0.7em;
+    margin-left: 4px;
+  }
+  #content {
+    flex: 1;
+    padding: 20px;
+  }
+  .actions {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+  }
+  select, button {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  .saved {
+    color: green;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h2>Inbox</h2>
+  <div id="email-list"></div>
+</div>
+
+<div id="content">
+  <h2>Select an email to view</h2>
+  <div id="email-content"></div>
+</div>
+
+<script>
+const emails = [
+  {
+    id: 1,
+    sender: "student@h-brs.de",
+    subject: "VPN not working",
+    body: "Hi, I can't connect to the VPN since last night. Could you please check?",
+  },
+  {
+    id: 2,
+    sender: "professor@h-brs.de",
+    subject: "Projector issue in Room B123",
+    body: "The projector in room B123 is not turning on. It might be a hardware issue.",
+  },
+  {
+    id: 3,
+    sender: "student2@h-brs.de",
+    subject: "Password reset",
+    body: "Hallo, ich kann mich nicht mehr im Studierendenportal anmelden. Können Sie bitte mein Passwort zurücksetzen?",
+  },
+];
+
+const topics = ["Account", "Network", "Hardware", "Software", "Other"];
+
+const emailListDiv = document.getElementById("email-list");
+const emailContentDiv = document.getElementById("email-content");
+
+function renderEmailList() {
+  emailListDiv.innerHTML = "";
+  emails.forEach(email => {
+    const item = document.createElement("div");
+    item.className = "email-item";
+    item.onclick = () => openEmail(email);
+
+    // subject line
+    const subjectDiv = document.createElement("div");
+    subjectDiv.className = "email-subject";
+    subjectDiv.textContent = email.subject;
+
+    // topic tag (if saved)
+    if (email.topic) {
+      const tag = document.createElement("span");
+      tag.className = "email-tag";
+      tag.textContent = email.topic;
+      subjectDiv.appendChild(tag);
+    }
+
+    // priority tag (if saved)
+    if (email.priority) {
+      const pTag = document.createElement("span");
+      pTag.className = "priority-tag";
+      pTag.textContent = "P" + email.priority;
+      subjectDiv.appendChild(pTag);
+    }
+
+    item.appendChild(subjectDiv);
+    emailListDiv.appendChild(item);
+  });
+}
+
+function openEmail(email) {
+  emailContentDiv.innerHTML = `
+    <h3>${email.subject}</h3>
+    <p><strong>From:</strong> ${email.sender}</p>
+    <p>${email.body}</p>
+    <div class="actions">
+      <label>Topic: </label>
+      <select id="topic-${email.id}">
+        <option value="">Select topic</option>
+        ${topics.map(t => `<option value="${t}" ${email.topic === t ? "selected" : ""}>${t}</option>`).join("")}
+      </select>
+      <label>Priority: </label>
+      <select id="priority-${email.id}">
+        <option value="">Select</option>
+        <option value="1" ${email.priority === "1" ? "selected" : ""}>1 - Urgent</option>
+        <option value="2" ${email.priority === "2" ? "selected" : ""}>2 - Normal</option>
+        <option value="3" ${email.priority === "3" ? "selected" : ""}>3 - Low</option>
+      </select>
+      <button onclick="saveEmail(${email.id})">Save</button>
+      <span id="saved-${email.id}" class="saved"></span>
+    </div>
+  `;
+}
+
+function saveEmail(id) {
+  const topic = document.getElementById(`topic-${id}`).value;
+  const priority = document.getElementById(`priority-${id}`).value;
+  if (!topic || !priority) {
+    alert("Please select both topic and priority before saving.");
+    return;
+  }
+  const email = emails.find(e => e.id === id);
+  email.topic = topic;
+  email.priority = priority;
+  document.getElementById(`saved-${id}`).textContent = "✓ Saved!";
+  setTimeout(() => {
+    document.getElementById(`saved-${id}`).textContent = "";
+  }, 1000);
+  renderEmailList(); // update sidebar immediately
+}
+
+renderEmailList();
+</script>
+
+</body>
+</html>
