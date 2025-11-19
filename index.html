@@ -1,151 +1,271 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Service Desk Inbox Simulation</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    height: 100vh;
-    margin: 0;
-  }
-  #sidebar {
-    width: 30%;
-    background: #f1f3f6;
-    border-right: 1px solid #ccc;
-    overflow-y: auto;
-  }
-  #sidebar h2 {
-    text-align: center;
-    padding: 10px;
-  }
-  .email-item {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-  }
-  .email-item:hover {
-    background: #e6e9ef;
-  }
-  .email-subject {
-    font-weight: bold;
-  }
-  .email-tag {
-    display: inline-block;
-    background: #007bff;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 5px;
-    font-size: 0.7em;
-    margin-left: 8px;
-  }
-  .priority-tag {
-    display: inline-block;
-    background: #ff9800;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 5px;
-    font-size: 0.7em;
-    margin-left: 4px;
-  }
-  #content {
-    flex: 1;
-    padding: 20px;
-  }
-  .actions {
-    margin-top: 20px;
-    border-top: 1px solid #ccc;
-    padding-top: 10px;
-  }
-  select, button {
-    margin-right: 10px;
-    padding: 5px;
-  }
-  .saved {
-    color: green;
-    font-weight: bold;
-  }
-</style>
-</head>
-<body>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Desk Inbox Simulation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        height: 100vh;
+        margin: 0;
+      }
+      #sidebar {
+        width: 30%;
+        background: #f1f3f6;
+        border-right: 1px solid #ccc;
+        overflow-y: auto;
+      }
+      #sidebar h2 {
+        text-align: center;
+        padding: 10px;
+      }
+      .email-item {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+      }
+      .email-item:hover {
+        background: #e6e9ef;
+      }
+      .email-subject {
+        font-weight: bold;
+      }
+      .email-tag {
+        display: inline-block;
+        background: #007bff;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 5px;
+        font-size: 0.7em;
+        margin-left: 8px;
+      }
+      .priority-tag {
+        display: inline-block;
+        background: #ff9800;
+        color: white;
+        padding: 2px 5px;
+        border-radius: 5px;
+        font-size: 0.7em;
+        margin-left: 4px;
+      }
+      #content {
+        flex: 1;
+        padding: 20px;
+      }
+      .actions {
+        margin-top: 20px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+      }
+      select,
+      button {
+        margin-right: 10px;
+        padding: 5px;
+      }
+      .saved {
+        color: green;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar">
+      <h2>Inbox</h2>
+      <div id="email-list"></div>
+    </div>
 
-<div id="sidebar">
-  <h2>Inbox</h2>
-  <div id="email-list"></div>
-</div>
+    <div id="content">
+      <h2>Service Desk - Hochschule Bonn-Rhein-Sieg</h2>
+      <div id="email-content">
+        <p>Bitte wählen Sie links eine E-Mail aus, um sie zu bearbeiten.</p>
+      </div>
+    </div>
 
-<div id="content">
-  <h2>Service Desk - Hochschule Bonn-Rhein-Sieg</h2>
-  <div id="email-content"></div>
-</div>
+    <script>
+      const emails = [
+        {
+          id: 1,
+          sender: "hoan.vu@h-brs.de",
+          subject: "Eduroam funktioniert nicht auf dem Handy",
+          body:
+            "Sehr geehrte Damen und Herren,<br><br>" +
+            "ich konnte seit dem 13.12.2025 mit meinem Handy keine Verbindung mehr mit eduroam herstellen. " +
+            "Bei jedem Verbindungsversuch erscheint ein Netzwerkfehler. Ich habe bereits überprüft, dass meine Anmeldedaten korrekt sind " +
+            "und es mit meinem Laptop funktioniert.<br><br>" +
+            "Matrikelnummer: hvu2s<br>" +
+            "Benutzer: hoan.vu@h-brs.de<br>" +
+            "Netzwerkgerät: iPhone 7<br>" +
+            "Betriebssystem: iOS 15<br><br>" +
+            "Ich wäre Ihnen sehr dankbar, wenn Sie mir zeitnah bei der Lösung des Problems helfen könnten. Vielen Dank im Voraus für Ihre Unterstützung.<br><br>" +
+            "Mit freundlichen Grüßen<br>Hoan Vu",
+        },
+        {
+          id: 2,
+          sender: "lena.schmidt@smail.h-brs.de",
+          subject: "Neuer Student – eduroam-Zugang funktioniert nicht",
+          body:
+            "Guten Tag,<br><br>" +
+            "ich bin seit diesem Semester neu an der H-BRS und versuche, mich mit meinem Hochschul-Account bei eduroam anzumelden. " +
+            "Ich habe den Konfigurator von der Website heruntergeladen, aber beim Verbinden kommt immer wieder die Meldung " +
+            '"Authentifizierung fehlgeschlagen".<br><br>' +
+            "Können Sie mir sagen, ob mein Konto für eduroam schon freigeschaltet ist oder ob ich etwas falsch einstelle?<br><br>" +
+            "Viele Grüße<br>Lena Schmidt",
+        },
+        {
+          id: 3,
+          sender: "exchange.johnson@students.example.com",
+          subject: "Eduroam not working on Android phone",
+          body:
+            "Dear IT support,<br><br>" +
+            "I am an exchange student and I can't connect to eduroam on my Android phone (Google Pixel 6). " +
+            "The network is visible, but when I try to connect, I get a message about a certificate that I should not trust.<br><br>" +
+            "Could you please explain which settings I should use (EAP method, Phase 2 authentication, CA certificate)?<br><br>" +
+            "Best regards,<br>Alex Johnson",
+        },
+        {
+          id: 4,
+          sender: "marco.bauer@smail.h-brs.de",
+          subject: "DRINGEND: Kein eduroam während Online-Klausur",
+          body:
+            "Hallo Service Desk,<br><br>" +
+            "ich schreibe morgen um 10:00 Uhr eine Online-Klausur in Raum F 238 und habe dort heute bemerkt, " +
+            "dass sich mein Laptop nicht mit eduroam verbinden kann. Auf dem Handy geht es, aber auf dem Laptop bekomme ich " +
+            'immer nur "Keine Verbindung zum Netzwerk".<br><br>' +
+            "Da ich für die Klausur eine stabile Internetverbindung brauche, ist das ziemlich dringend. " +
+            "Können Sie mir bitte sagen, was ich überprüfen kann oder ob es im F-Gebäude gerade ein Problem mit eduroam gibt?<br><br>" +
+            "Viele Grüße<br>Marco Bauer",
+        },
+        {
+          id: 5,
+          sender: "sara.khan@smail.h-brs.de",
+          subject: "Eduroam im Wohnheim – Gerätelimit erreicht?",
+          body:
+            "Sehr geehrtes IT-Team,<br><br>" +
+            "ich nutze eduroam im Wohnheim mit mehreren Geräten (Laptop, Handy, Tablet). " +
+            "Seit gestern kann ich mein neues Tablet nicht mehr verbinden. Es kommt keine konkrete Fehlermeldung, " +
+            "es wird einfach immer wieder nach Benutzernamen und Passwort gefragt.<br><br>" +
+            "Gibt es ein Limit für die Anzahl der Geräte pro Account? Falls ja, könnten Sie bitte eines meiner alten Geräte entfernen?<br><br>" +
+            "Mit freundlichen Grüßen<br>Sara Khan",
+        },
+        {
+          id: 6,
+          sender: "prof.meyer@h-brs.de",
+          subject:
+            "Gastzugang WLAN für externe Vortragende (eduroam/Alternativen)",
+          body:
+            "Liebes Service-Desk-Team,<br><br>" +
+            "in meinem Seminar habe ich nächste Woche zwei externe Vortragende, die keinen H-BRS-Account besitzen. " +
+            "Können diese Gäste eduroam nutzen oder gibt es einen separaten WLAN-Gastzugang, den ich beantragen muss?<br><br>" +
+            "Ich freue mich über eine kurze Rückmeldung, wie das Vorgehen ist und wie viel Vorlaufzeit benötigt wird.<br><br>" +
+            "Mit freundlichen Grüßen<br>Prof. Dr. Meyer",
+        },
+        {
+          id: 7,
+          sender: "tom.wagner@smail.h-brs.de",
+          subject: "Eduroam nach Passwort-Änderung ohne Funktion",
+          body:
+            "Hallo,<br><br>" +
+            "ich habe gestern mein Hochschul-Passwort über das Self-Service-Portal geändert. " +
+            "Seitdem verbindet sich mein Laptop nicht mehr mit eduroam, mein Handy aber schon. " +
+            "Ich vermute, dass irgendwo noch das alte Passwort gespeichert ist, aber ich finde die Einstellung nicht.<br><br>" +
+            "Können Sie mir sagen, wie ich auf Windows 11 das gespeicherte eduroam-Profil zurücksetzen kann?<br><br>" +
+            "Mit freundlichen Grüßen<br>Tom Wagner",
+        },
+        {
+          id: 8,
+          sender: "tom.wagner@smail.h-brs.de",
+          subject:
+            "Re: Eduroam nach Passwort-Änderung ohne Funktion – Problem gelöst",
+          body:
+            "Hallo nochmal,<br><br>" +
+            "Sie können meine vorherige Anfrage ignorieren, ich habe das Problem selbst lösen können. " +
+            "Ich habe das eduroam-Profil in Windows entfernt und neu eingerichtet, jetzt funktioniert alles wieder.<br><br>" +
+            "Vielen Dank trotzdem und einen schönen Tag!<br><br>" +
+            "Viele Grüße<br>Tom Wagner",
+        },
+        {
+          id: 9,
+          sender: "julia.reinhardt@smail.h-brs.de",
+          subject: "Verbindung zu eduroam bricht ständig ab (Gebäude F)",
+          body:
+            "Guten Tag,<br><br>" +
+            "ich habe seit einigen Tagen das Problem, dass die Verbindung zu eduroam im Gebäude F (3. Stock) ständig abbricht. " +
+            "Alle paar Minuten werde ich getrennt und muss mich neu verbinden. In anderen Gebäuden (z. B. A und B) habe ich das Problem nicht.<br><br>" +
+            "Können Sie prüfen, ob es in diesem Bereich eine bekannte Störung gibt oder ob ich an meinen Einstellungen etwas ändern kann?<br><br>" +
+            "Beste Grüße<br>Julia Reinhardt",
+        },
+        {
+          id: 10,
+          sender: "michael.green@students.example.org",
+          subject: "Eduroam on MacBook – keeps asking for password",
+          body:
+            "Hi IT support,<br><br>" +
+            "I'm using a MacBook Air (macOS Sonoma) and try to connect to eduroam. " +
+            "The network appears, but after entering my username and password, the dialog keeps popping up again. " +
+            "I am sure that my credentials are correct, because they work in the portal.<br><br>" +
+            "Do I need to install a configuration profile or a certificate first?<br><br>" +
+            "Kind regards,<br>Michael Green",
+        },
+        {
+          id: 11,
+          sender: "anna.lopez@smail.h-brs.de",
+          subject: "Linux-Laptop mit eduroam verbinden (Ubuntu)",
+          body:
+            "Hallo Service Desk,<br><br>" +
+            "ich nutze einen Laptop mit Ubuntu 24.04 und würde diesen gerne mit eduroam verbinden. " +
+            "In den WLAN-Einstellungen gibt es viele Optionen (PEAP, EAP-TTLS, innere Authentifizierung usw.) und ich bin unsicher, was ich auswählen soll.<br><br>" +
+            "Gibt es eine Anleitung speziell für Linux/Ubuntu oder können Sie mir die korrekten Einstellungen kurz nennen?<br><br>" +
+            "Viele Grüße<br>Anna Lopez",
+        },
+      ];
 
-<script>
-const emails = [
-  {
-    id: 1,
-    sender: "hoan.vu@h-brs.de",
-    subject: "Eduroam funktioniert nicht",
-    body: "Sehr geehrte Damen und Herren,<br><br>ich konnte seit 13.12.2025 mit meinem Handy keine Verbindung mehr mit dem Eduroam herstellen. Bei jedem Verbindungsversuch erscheint ein Netzwerkfehler. Ich habe bereits überprüft, dass meine Anmeldedaten korrekt sind und es mit meinem Laptop funktioniert.<br><br>" +
-    "Matrikel-Nummer: hvu2s<br>Benutzer: hoan.vu@h-brs.de<br>Netzwerkgerät: Iphone 7<br>Betriebssystem: iOS 5<br><br>" +
-     "Ich wäre Ihnen sehr dankbar, wenn Sie mir zeitnah bei der Lösung des Problems helfen könnten. Vielen Dank im Voraus für Ihre Unterstützung.<br><br>Mit freundlichen Grüßen<br>Hoan Vu",
-  },
-  // Add more email objects as needed
-  {
-    id: 2,
-    sender: "test1",
-    subject: "test1",
-    body: "test1",
-  },
-  {
-    id: 3,
-    sender: "test2",
-    subject: "test2",
-    body: "test2",
-  }
-];
+      const topics = [
+        "Konto",
+        "Netzwerk",
+        "Hardware",
+        "Software",
+        "Bewerbung",
+        "Sonstiges",
+        "Gelöst",
+      ];
 
-const topics = ["Konto", "Netzwerk", "Hardware", "Software", "Bewerbung", "Sonstiges", "Gelöst"];
+      const emailListDiv = document.getElementById("email-list");
+      const emailContentDiv = document.getElementById("email-content");
 
-const emailListDiv = document.getElementById("email-list");
-const emailContentDiv = document.getElementById("email-content");
+      function renderEmailList() {
+        emailListDiv.innerHTML = "";
+        emails.forEach((email) => {
+          const item = document.createElement("div");
+          item.className = "email-item";
+          item.onclick = () => openEmail(email);
 
-function renderEmailList() {
-  emailListDiv.innerHTML = "";
-  emails.forEach(email => {
-    const item = document.createElement("div");
-    item.className = "email-item";
-    item.onclick = () => openEmail(email);
+          const subjectDiv = document.createElement("div");
+          subjectDiv.className = "email-subject";
+          subjectDiv.textContent = email.subject;
 
-    // subject line
-    const subjectDiv = document.createElement("div");
-    subjectDiv.className = "email-subject";
-    subjectDiv.textContent = email.subject;
+          if (email.topic) {
+            const tag = document.createElement("span");
+            tag.className = "email-tag";
+            tag.textContent = email.topic;
+            subjectDiv.appendChild(tag);
+          }
 
-    // topic tag (if saved)
-    if (email.topic) {
-      const tag = document.createElement("span");
-      tag.className = "email-tag";
-      tag.textContent = email.topic;
-      subjectDiv.appendChild(tag);
-    }
+          if (email.priority) {
+            const pTag = document.createElement("span");
+            pTag.className = "priority-tag";
+            pTag.textContent = "P" + email.priority;
+            subjectDiv.appendChild(pTag);
+          }
 
-    // priority tag (if saved)
-    if (email.priority) {
-      const pTag = document.createElement("span");
-      pTag.className = "priority-tag";
-      pTag.textContent = "P" + email.priority;
-      subjectDiv.appendChild(pTag);
-    }
+          item.appendChild(subjectDiv);
+          emailListDiv.appendChild(item);
+        });
+      }
 
-    item.appendChild(subjectDiv);
-    emailListDiv.appendChild(item);
-  });
-}
-
-function openEmail(email) {
-  emailContentDiv.innerHTML = `
+      function openEmail(email) {
+        emailContentDiv.innerHTML = `
     <h3>${email.subject}</h3>
     <p><strong>Von:</strong> ${email.sender}</p>
     <p>${email.body}</p>
@@ -153,41 +273,58 @@ function openEmail(email) {
       <label>Thema: </label>
       <select id="topic-${email.id}">
         <option value="">Thema auswählen</option>
-        ${topics.map(t => `<option value="${t}" ${email.topic === t ? "selected" : ""}>${t}</option>`).join("")}
+        ${topics
+          .map(
+            (t) =>
+              `<option value="${t}" ${
+                email.topic === t ? "selected" : ""
+              }>${t}</option>`
+          )
+          .join("")}
       </select>
       <label>Priorität: </label>
       <select id="priority-${email.id}">
         <option value="">Auswählen</option>
-        <option value="1" ${email.priority === "1" ? "selected" : ""}>1 - Hoch</option>
-        <option value="2" ${email.priority === "2" ? "selected" : ""}>2 - Normal</option>
-        <option value="3" ${email.priority === "3" ? "selected" : ""}>3 - Niedrig</option>
-        <option value="0" ${email.priority === "0" ? "selected" : ""}>0 - Keine</option>
+        <option value="1" ${
+          email.priority === "1" ? "selected" : ""
+        }>1 - Hoch</option>
+        <option value="2" ${
+          email.priority === "2" ? "selected" : ""
+        }>2 - Normal</option>
+        <option value="3" ${
+          email.priority === "3" ? "selected" : ""
+        }>3 - Niedrig</option>
+        <option value="0" ${
+          email.priority === "0" ? "selected" : ""
+        }>0 - Keine</option>
       </select>
-      <button onclick="saveEmail(${email.id})">Save</button>
+      <button onclick="saveEmail(${email.id})">Speichern</button>
       <span id="saved-${email.id}" class="saved"></span>
     </div>
   `;
-}
+      }
 
-function saveEmail(id) {
-  const topic = document.getElementById(`topic-${id}`).value;
-  const priority = document.getElementById(`priority-${id}`).value;
-  if (!topic || !priority) {
-    alert("Please select both topic and priority before saving.");
-    return;
-  }
-  const email = emails.find(e => e.id === id);
-  email.topic = topic;
-  email.priority = priority;
-  document.getElementById(`saved-${id}`).textContent = "✓ Saved!";
-  setTimeout(() => {
-    document.getElementById(`saved-${id}`).textContent = "";
-  }, 1000);
-  renderEmailList(); // update sidebar immediately
-}
+      function saveEmail(id) {
+        const topic = document.getElementById(`topic-${id}`).value;
+        const priority = document.getElementById(`priority-${id}`).value;
+        if (!topic || !priority) {
+          alert(
+            "Bitte wählen Sie sowohl ein Thema als auch eine Priorität aus, bevor Sie speichern."
+          );
+          return;
+        }
+        const email = emails.find((e) => e.id === id);
+        email.topic = topic;
+        email.priority = priority;
+        const savedSpan = document.getElementById(`saved-${id}`);
+        savedSpan.textContent = "✓ Gespeichert!";
+        setTimeout(() => {
+          savedSpan.textContent = "";
+        }, 1000);
+        renderEmailList();
+      }
 
-renderEmailList();
-</script>
-
-</body>
+      renderEmailList();
+    </script>
+  </body>
 </html>
